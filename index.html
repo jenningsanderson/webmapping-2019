@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>A Leaflet map!</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+    crossorigin=""></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous"></script>
+    <script src="leaflet-hash.js"></script>
+  <style>
+    #map{ position:fixed; top:0; left:0; right:0; bottom: 0;}
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <script>
+
+  // initialize the map
+  var map = L.map('map').setView([39.75, -105.01], 14);
+
+  var hash = new L.Hash(map);
+
+  // load a tile layer (see http://leaflet-extras.github.io/leaflet-providers/preview/ and copy w/o ""})."" or pick one below)
+
+  // Here's a direct URL Stamen option - replace "toner" here with "terrain" or "watercolor" (watercolor has different attribution, though)
+  // L.tileLayer('http://tile.stamen.com/terrain/{z}/{x}/{y}.png',
+  //   {
+  //     attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>',
+  //     maxZoom: 17,
+  //     minZoom: 2
+  //   }).addTo(map);
+
+  // var Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+  // 	attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+
+  // var NASAGIBS_ViirsEarthAtNight2012 = L.tileLayer('https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.{format}', {
+  // 	attribution: 'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.',
+  // 	bounds: [[-85.0511287776, -179.999999975], [85.0511287776, 179.999999975]],
+  // 	minZoom: 1,
+  // 	maxZoom: 8,
+  // 	format: 'jpg',
+  // 	time: '',
+  // 	tilematrixset: 'GoogleMapsCompatible_Level'
+  // }).addTo(map);
+
+
+  var Thunderforest_TransportDark = L.tileLayer('https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey={apikey}', {
+    attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    apikey: '68a27ce721b14af2ac8c285d0169a1c0',
+    maxZoom: 22
+  }).addTo(map);
+
+
+
+
+    $.getJSON("./data/firestations.geojson",function(data){
+      L.geoJson(data,{
+          onEachFeature: function(feature,layer){
+            layer.bindPopup(`<a href="tel:${feature.properties.HOUSE_PHON}">Call Me</a>`);
+          }
+        }).addTo(map)
+    });
+
+    // $.getJSON("./data/10k-uber-buildings.geojson",function(data){
+    //   //  add GeoJSON layer to the map once the file is loaded
+    //   L.geoJson(data,{
+    //     onEachFeature: function(feature,layer){
+    //       layer.bindPopup('hi');
+    //     }
+    //   }).addTo(map);
+    // });
+
+  </script>
+</body>
+</html>
